@@ -1,11 +1,48 @@
 kops create cluster \
-    --cloud=aws \
-    --node-count=5 \
-    --node-size=t2.medium \
-    --master-size=t2.medium \
-    --zones us-east-2a,us-east-2b,us-east-2c \
-    --master-zones us-east-2a,us-east-2b,us-east-2c \
-    --topology private \
-    --networking calico \
-    --bastion \
-    ${NAME}
+   --name="<replace with clustername>" \
+   --cloud-labels="Product=<productname>" \
+   --cloud="aws" \
+   --network-cidr="<CIDR range> \
+   --networking="weave" \
+   --master-zones="<replace with zones for master>" \
+   --zones="<replace with availability zones>" \
+   --master-size="t2.medium" \
+   --master-count="3" \
+   --node-size="t2.large" \
+   --node-count="3" \
+   --ssh-public-key=<public key for master,node,bastion> \
+   --state="s3://<s3 bucket name for state>" \
+   --topology="private" \
+   --api-loadbalancer-type="internal" \
+   --kubernetes-version="<cluster version>" \
+   --ssh-access="<IP range to allow ssh access>" \
+   --subnets="<replace private subnet IDs>" \
+   --dns-zone="<route53 dns zone>" \
+   --bastion="true" \
+   --master-security-groups="<replace existing SG Id for Master>" \
+   --node-security-groups="<replace existing SG Id for Node>" \
+   --utility-subnets="<replace public subnet IDs for bastion>" \
+   --vpc="<replace VPC Id>" \
+   --dns="private" \
+   --dry-run -o yaml > cluster.yaml
+##############################
+ kops create cluster \
+   --name="test.demo.local" #replace with clustername\  
+   --cloud="aws" \
+   --network-cidr="192.168.0.0/16" \
+   --networking="weave" \
+   --master-zones="us-east-2a,us-east-2b,us-east-2c" \
+   --zones="us-east-2a,us-east-2b,us-east-2c" \
+   --master-size="t2.medium" \
+   --master-count="3" \
+   --node-size="t2.medium" \
+   --node-count="3" \
+   --state="s3://ibrahimsite.xyz" \
+   --topology="private" \
+   --subnets="subnet-0ced12342,subnet-036dw235fwr32,subnet-0w54fgrgt45232" #private-subnet\
+   --bastion="true" \
+   --master-security-groups="sg-3fd5543fevd5rve" \
+   --node-security-groups="sg-023frt5dfsthtb" \
+   --utility-subnets="subnet-09infdsjtr2fdf5fe,subnet-43sf54dfsafwe43rg,subnet-04ft4vfdgbthrhgv"#public subnet for bastion \
+   --vpc="vpc-03rrtgvtr5525tfvdfv" #vpcid\
+   --dry-run -o yaml > cluster.yaml
